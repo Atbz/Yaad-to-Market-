@@ -81,8 +81,13 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestone();
 
-function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
-
+function showAuth(){ 
+alert('showAuth was clicked!')
+  let el = document.getelementbyId('authBox');
+  if(!el){alert('authBox NOT FOUND'); return;}
+    el.style.display ='block';
+          el.scrollIntoView({behavior:'smooth'});
+  
 async function signup(){
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
