@@ -59,7 +59,24 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 </div>
 
 <script>
-const firebaseConfig = { PASTE YOUR CONFIG HERE };
+const firebaseConfig = // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBLGA_B9rwMh_tllJ2dGJbf3duo9ZrTOgM",
+  authDomain: "yaad-to-market-kngst.firebaseapp.com",
+  databaseURL: "https://yaad-to-market-kngst-default-rtdb.firebaseio.com",
+  projectId: "yaad-to-market-kngst",
+  storageBucket: "yaad-to-market-kngst.firebasestorage.app",
+  messagingSenderId: "209573811332",
+  appId: "1:209573811332:web:37a9ef4fe63c3615eb1ed1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);;
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
