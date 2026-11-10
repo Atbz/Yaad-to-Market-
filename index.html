@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yaad Market - Rebuild</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<style>
+*{box-sizing:border-box;font-family:Arial}body{margin:0;background:#f4f6e8}
+header{background:#0a4a1f;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+header img{height:48px;width:48px;border-radius:50%;background:#fff;object-fit:cover}
+button{background:#ffaa00;border:0;padding:9px 12px;border-radius:8px;font-weight:700;cursor:pointer;margin:3px;font-size:13px}
+button.green{background:#0a4a1f;color:#fff}button.blue{background:#0066cc;color:#fff}button.red{background:#c00;color:#fff}
+.card{background:#fff;border-radius:12px;padding:14px;margin:12px;box-shadow:0 2px 8px #0001}
+input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc;border-radius:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.prod{border:1px solid #eee;border-radius:10px;padding:10px}.prod img{width:100%;height:110px;object-fit:cover;border-radius:8px}
+.badge{background:#ffe9b0;padding:3px 8px;border-radius:20px;font-size:11px}
+.hidden{display:none}.flex{display:flex;gap:8px;flex-wrap:wrap}
+.cashbox{background:#fff8d6;border:2px solid #ffaa00;padding:12px;border-radius:10px}
+.orderbox{border:2px solid #ddd;border-radius:10px;padding:10px;margin:8px 0}
+.stars{font-size:28px;cursor:pointer}.stars span{color:#ccc}.stars span.on{color:#ffaa00}
+.timer{color:#c00;font-weight:700}.review{border-left:3px solid #ffaa00;padding:6px;margin:6px 0;background:#fff8e6}
+.live{color:#0a0;font-weight:700}
+</style></head><body>
+
+<header><b>Yaad Market KINGSTON</b><span id="userLabel">Guest</span><button id="loginBtn" onclick="showAuth()" style="width:auto">Login</button></header>
+
+<!-- CUSTOMER VIEW -->
+<div id="customerView" class="card hidden">
+  <h2>Welcome Customer - <span id="custName"></span></h2>
+  <p>You will see: Markets > Vendors > Goods here in Step 3.</p>
+  <p id="custDebug"></p>
+</div>
+
+<!-- VENDOR VIEW -->
+<div id="vendorView" class="card hidden">
+  <h2>Welcome Vendor - <span id="vendorName"></span></h2>
+  <p>Market: <span id="vendorMarket"></span></p>
+  <p>You will see: Your Goods + Orders + Cash + Reviews here in Step 2.</p>
+  <p id="vendorDebug"></p>
+</div>
+
+<!-- LOGIN / SIGNUP -->
+<div id="authBox" class="card">
+  <h2>Login / Create Account</h2>
+  <input id="name" placeholder="Your Name">
+  <input id="email" placeholder="Email - e.g. mavis@gmail.com">
+  <input id="pass" type="password" placeholder="Password - 6+ chars">
+  <select id="role"><option value="customer">I am a Customer</option><option value="vendor">I am a Vendor</option></select>
+  <select id="market">
+    <option>Coronation Market</option><option>Cross Roads Market</option>
+    <option>Papine Market</option><option>Constant Spring Market</option><option>Half Way Tree Market</option>
+  </select>
+  <input id="phone" placeholder="WhatsApp e.g 8765550100">
+  <button onclick="signup()">Create Account</button>
+  <button onclick="login()" style="background:#0a4a1f;color:#fff">Login</button>
+  <p id="authMsg"></p>
+</div>
+
+<script>
+const firebaseConfig = { PASTE YOUR CONFIG HERE };
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
+
+async function signup(){
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('pass').value;
+  const role = document.getElementById('role').value;
+  const market = document.getElementById('market').value;
+  const phone = document.getElementById('phone').value;
+  if(!name || !email || pass.length < 6) return alert('Name + Email + 6 char password');
+  try{
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    await db.ref('users/' + cred.user.uid).set({ name, email, role, market, phone, cashCollected: 0, ordersCompleted: 0, createdAt: Date.now() });
+    loadUser(cred.user.uid);
+  }catch(e){ alert(e.message); }
+}
+
+async function login(){
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('pass').value;
+  try{
+    const cred = await auth.signInWithEmailAndPassword(email, pass);
+    loadUser(cred.user.uid);
+  }catch(e){ alert(e.message); }
+}
+
+async function loadUser(uid){
+  const snap = await db.ref('users/' + uid).once('value');
+  const user = snap.val();
+  if(!user) return alert('User profile not found');
+  document.getElementById('userLabel').innerText = user.name + ' (' + user.role + ')';
+  document.getElementById('loginBtn').innerText = 'Logout';
+  document.getElementById('loginBtn').onclick = () => auth.signOut().then(()=>location.reload());
+  document.getElementById('authBox').classList.add('hidden');
+
+  if(user.role === 'vendor'){
+    document.getElementById('vendorView').classList.remove('hidden');
+    document.getElementById('vendorName').innerText = user.name;
+    document.getElementById('vendorMarket').innerText = user.market;
+    document.getElementById('vendorDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Vendor only';
+  } else {
+    document.getElementById('customerView').classList.remove('hidden');
+    document.getElementById('custName').innerText = user.name;
+    document.getElementById('custDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Customer only';
+  }
+}
+
+auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
+</script></body></html>
