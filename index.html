@@ -170,7 +170,11 @@ async function loadMyGoods(){
   document.getElementById('myGoodsList').innerHTML = html;
 }
   function showAuth(){
-    let authDiv = document.getElementById('auth');
-    if(authDiv){ authDiv.classList.remove('hidden'); authdiv.scrollIntoView(); return; }
+    let authDiv = document.getElementById('authBox');
+    if(authDiv){ 
+      authDiv.classList.remove('hidden'); 
+      authdiv.scrollIntoView();
+      return; }
     alert('auth box not found - id="auth" is missing');
+  }
 </script></body></html>
