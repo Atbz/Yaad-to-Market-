@@ -24,7 +24,7 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 .live{color:#0a0;font-weight:700}
 </style></head><body>
 
-<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="showauth()">Login</button></header>
+<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="showAuth()">Login</button></header>
   
 <!-- CUSTOMER VIEW -->
 <div id="customerView" class="card hidden">
@@ -169,4 +169,8 @@ async function loadMyGoods(){
   if(!html) html = 'No goods yet. Add one above.';
   document.getElementById('myGoodsList').innerHTML = html;
 }
+  function showAuth(){
+    let authDiv = document.getElementById('auth');
+    if(authDiv){ authDiv.classList.remove('hidden'); authdiv.scrollIntoView(); return; }
+    alert('auth box not found - id="auth" is missing');
 </script></body></html>
