@@ -26,6 +26,19 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 </style></head><body>
 
 <header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="show('auth')">Login</button></header>
+
+<!-- update for header login-->
+  <div id= "auth" class="screen" style="display:none:">
+    <h2>Login</h2>
+    <input id="nameInput" type="name" placeholder="Name">
+    <input id="passwordInput" type="password" placeholder="password">
+    <button onclick="doLogin()">Login</button>
+    <button onclick="doSignup()">CreateAccount</button>
+    <button onclick="show('home')">Back</button>
+  </div>
+
+  <div id="home" class="screen">
+  </div>
   
 <!-- CUSTOMER VIEW -->
 <div id="customerView" class="card hidden">
@@ -111,6 +124,31 @@ async function loadUser(uid){
   document.getElementById('loginBtn').onclick = () => auth.signOut().then(()=>location.reload());
   document.getElementById('authBox').classList.add('hidden');
 
+  function show(id){
+    //Hide all screens
+    document.querySelectorAll('.screen').foreach(s => s.style.display ='none');
+    //Show the one you asked for
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  }
+
+  function doLogin(){
+    const email = document.getElementById('emailInput').value;
+    const pass = document.getElementById('passwordInput').value;
+    auth.signInWithEmailAndPassword(email, pass)
+    .then(() => show('home'))
+    .catch(e => alert(e.message));
+  }
+
+  function doSignup(){
+    const email = document.getElementById('emailInput').value
+    const pass = doc.getElementById('passwordInput').value
+    auth.createUserWithEmailAndPassword(email, pass)
+    .then(() => show('home'))
+    .catch(e => alert(e.message));
+  }
+    
+
   if(user.role === 'vendor'){
     document.getElementById('vendorView').classList.remove('hidden');
     document.getElementById('vendorName').innerText = user.name;
@@ -124,4 +162,14 @@ async function loadUser(uid){
 }
 
 auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
+  aut.onAuthStateChange(User) => {
+  const btn = documnent.getElementById('loginBtn');
+    const label = document.getElementById('userLabel')
+
+    if (user){
+      label.textContent = user.name;
+      btn.textContent = 'Logout';
+      btn.onclick = () => show ('auth');
+    }
+  });
 </script></body></html>
