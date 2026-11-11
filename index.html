@@ -130,22 +130,6 @@ async function loadUser(uid){
     const el = document.getElementById(id);
     if (el) el.style.display = 'block';
   }
-
-  async function doLogin(){
-    const email = document.getElementById('emailInput').value;
-    const pass = document.getElementById('passwordInput').value;
-    auth.signInWithEmailAndPassword(email, pass)
-    .then(() => show('home'))
-    .catch(e => alert(e.message));
-  }
-
-  async function doSignup(){
-    const email = document.getElementById('emailInput').value
-    const pass = doc.getElementById('passwordInput').value
-    auth.createUserWithEmailAndPassword(email, pass)
-    .then(() => show('home'))
-    .catch(e => alert(e.message));
-  }
     
 
   if(user.role === 'vendor'){
