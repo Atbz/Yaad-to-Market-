@@ -39,6 +39,14 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
   <p>Market: <span id="vendorMarket"></span></p>
   <p>You will see: Your Goods + Orders + Cash + Reviews here in Step 2.</p>
   <p id="vendorDebug"></p>
+  <h3>My Goods</h3>
+  <input id="goodName" placeholder="Good name - e.g. Yam">
+  <input id="goodPrice" type="number" placeholder="Price - e.g. 500">
+  <input id="goodQty" type="number" placeholder="Qty -e.g. 10">
+  <button onclick="addGood()">Add Good</button>
+  <div id="goodsList"></div>
+
+  <p>Orders + Cash + Review coming next.</p>
 </div>
 
 <!-- LOGIN / SIGNUP -->
