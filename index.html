@@ -36,8 +36,8 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 <!-- VENDOR VIEW -->
 <div id="vendorView" class="card hidden">
   <h2>Welcome Vendor - <span id="vendorName"></span></h2>
-  <select id="vendorMarketSelect">
-    <option>Coronation Market</option>
+  <select id="vendorMarketSelect" onchange="document.getElementById('vendorMarket').textContent = this.value">
+    <option value="Coronation Market">Coronation Market</option>
     <option>Cross Roads Market</option>
     <option>Papine Market</option>
     <option>Constant Spring Market</option>
@@ -151,9 +151,10 @@ async function addGood(){
   const name = document.getElementById('goodName').value.trim();
   const price = document.getElementById('goodPrice').value;
   const qty = document.getElementById('goodQty').value;
-  if(!name || !price){ alert('Add name and price'); return; }
+  const list = document.getElementById('goodsList');
+  if(!name || !price || Qty){ alert ('Add name and price'); return; }
   const user = auth.currentUser;
-  if(!user){ alert('Not logged in'); return; }
+  if(!user){ alert ('Not logged in'); return; }
   await db.ref('goods/' + user.uid).push({ name: name, price: Number(price), qty: Number(qty || 0), createdAt: Date.now() });
   document.getElementById('goodName').value = '';
   document.getElementById('goodPrice').value = '';
