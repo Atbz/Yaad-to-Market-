@@ -102,8 +102,21 @@ async function login(){
 
 async function loadUser(uid){
   const snap = await db.ref('users/' + uid).once('value');
-  const user = snap.val();
-  if(!user) return alert('User profile not found');
+  let user = snap.val();
+
+  // FIX: If Auth exists but profile is missing, rebuild it from the form instead of failing
+  if(!user){
+    const name = document.getElementById('name').value || 'Test Vendor';
+    const email = document.getElementById('email').value || 'vendor@test.com';
+    const role = document.getElementById('role').value || 'vendor';
+    const market = document.getElementById('market').value || 'Coronation Market';
+    const phone = document.getElementById('phone').value || '';
+    user = { name: name, email: email, role: role, market: market, phone: phone, cashCollected: 0 };
+    try{
+      await db.ref('users/' + uid).set(user);
+    }catch(e){ alert('Could not save profile: ' + e.message); return; }
+  }
+
   document.getElementById('userLabel').innerText = user.name + ' (' + user.role + ')';
   document.getElementById('loginBtn').innerText = 'Logout';
   document.getElementById('loginBtn').onclick = () => auth.signOut().then(()=>location.reload());
@@ -113,11 +126,11 @@ async function loadUser(uid){
     document.getElementById('vendorView').classList.remove('hidden');
     document.getElementById('vendorName').innerText = user.name;
     document.getElementById('vendorMarket').innerText = user.market;
-    document.getElementById('vendorDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Vendor only';
+    document.getElementById('vendorDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Vendor';
   } else {
     document.getElementById('customerView').classList.remove('hidden');
     document.getElementById('custName').innerText = user.name;
-    document.getElementById('custDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Customer only';
+    document.getElementById('custDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Customer';
   }
 }
 
