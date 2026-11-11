@@ -95,7 +95,9 @@ async function signup(){
 }
 
 async function login(){
-  const email = document.getElementById('email').value;
+  const email = document.getElementById('email').value.trim();
+  alert("Email I am sending to Firebase: [" + email + ");
+        //...rest
   const pass = document.getElementById('pass').value;
   try{
     const cred = await auth.signInWithEmailAndPassword(email, pass);
