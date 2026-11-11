@@ -37,8 +37,7 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 <div id="vendorView" class="card hidden">
   <h2>Welcome Vendor - <span id="vendorName"></span></h2>
   <p>Market: <span id="vendorMarket"></span></p>
-  <p id="vendorDebug"></p>
-  <h3>My Goods</h3>
+   <h3>My Goods</h3>
   <input id="goodName" placeholder="Good name - e.g. Yam">
   <input id="goodPrice" type="number" placeholder="Price - e.g. 500">
   <input id="goodQty" type="number" placeholder="Qty -e.g. 10">
@@ -46,6 +45,7 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
   <div id="goodsList"></div>
 
   <p>Orders + Cash + Review coming next.</p>
+  <p id="vendorDebug"></p>
 </div>
 
 <!-- LOGIN / SIGNUP -->
@@ -140,36 +140,38 @@ async function loadUser(uid){
     document.getElementById('custDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Customer';
   }
 }
-  auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
- 
-  async function addGood(){
-    const name = document.getElementById('goodName').value.trim();
-    const price = document.getElementById('goodPrice').value.();
-    const qty = document.getElementById('goodQty').value.();
-    if(!name || !price){alert('Add name and price');return; }
-    if(!currentVendorUid){alert('Not logged in as vendor'); return; }
-    await db.ref('goods/' + currentVendorUid).push({ name: name, price: Number(price), qty: Number(qty || 0), createdAt: Date.now() });
-    document.getElementById('goodName').value = '';
-     document.getElementById('goodPrice').value = '';
-     document.getElementById('goodQty').value = '';
-    loadVendorGoods();
-  }
+async function addGood(){
+  const name = document.getElementById('goodName').value.trim();
+  const price = document.getElementById('goodPrice').value;
+  const qty = document.getElementById('goodQty').value;
+  if(!name || !price){ alert('Add name and price'); return; }
+  const user = auth.currentUser;
+  if(!user){ alert('Not logged in'); return; }
+  await db.ref('goods/' + user.uid).push({ name: name, price: Number(price), qty: Number(qty || 0), createdAt: Date.now() });
+  document.getElementById('goodName').value = '';
+  document.getElementById('goodPrice').value = '';
+  document.getElementById('goodQty').value = '';
+  loadVendorGoods();
+}
 
-  async function loadVendorGoods(){
-    if(!currentVendorUid) return;
-    const snap = await db.ref('goods/' + currentVendorUid).once('value');
-    const goods = snap.val() || {};
-    let html = ' ';
-    for(let id in goods){
-      html += '<p>' + goods[id].name + ' - $' + goods[id].price + '(Qty: ' + goods[id].qty + ')</p>
-    }
-    document.getElementById('goodsList').innerHTML = html || <p>No goods yet.</p>';
+async function loadVendorGoods(){
+  const user = auth.currentUser;
+  if(!user) return;
+  const list = document.getElementById('goodsList');
+  if(!list) return;
+  const snap = await db.ref('goods/' + user.uid).once('value');
+  const goods = snap.val() || {};
+  let html = '';
+  for(let id in goods){
+    html += '<p>' + goods[id].name + ' - $' + goods[id].price + ' (Qty: ' + goods[id].qty + ')</p>';
   }
-
+  list.innerHTML = html || '<p>No goods yet.</p>';
+}
 
 auth.onAuthStateChanged(function(user){
   if(user){
-    SetTimeout(LoadVendorGoods, 500);
+    setTimeout(loadVendorGoods, 500);
   }
 });
+auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
 </script></body></html>
