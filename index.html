@@ -73,7 +73,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const db = firebase.database();
+const rtdb = firebase.database();
 comst fsdb = firebase.firestore();
 
 function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
