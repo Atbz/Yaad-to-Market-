@@ -89,7 +89,7 @@ async function signup(){
   if(!name || !email || pass.length < 6) return alert('Name + Email + 6 char password');
   try{
     const cred = await auth.createUserWithEmailAndPassword(email, pass);
-    await db.ref('users/' + cred.user.uid).set({ name, email, role, market, phone, cashCollected: 0, ordersCompleted: 0, createdAt: Date.now() });
+    await rtdb.ref('users/' + cred.user.uid).set({ name, email, role, market, phone, cashCollected: 0, ordersCompleted: 0, createdAt: Date.now() });
     loadUser(cred.user.uid);
   }catch(e){ alert(e.message); }
 }
@@ -104,7 +104,7 @@ async function login(){
 }
 
 async function loadUser(uid){
-  const snap = await db.ref('users/' + uid).once('value');
+  const snap = await rtdb.ref('users/' + uid).once('value');
   const user = snap.val();
   if(!user) return alert('User profile not found');
   document.getElementById('userLabel').innerText = user.name + ' (' + user.role + ')';
