@@ -75,6 +75,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const rtdb = firebase.database();
 const fsdb = firebase.firestore();
+  const db = rtdb;
 
 function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
 
