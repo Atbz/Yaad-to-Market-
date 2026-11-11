@@ -42,123 +42,22 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
   <p id="vendorDebug"></p>
 </div>
 
-<div id="loginSection" style="padding:20px; background:#fff; border-radius:12px; margin:10px;">
-  <h3>Login</h3>
-  <p id="loginMsg" style="color:red;"></p>
-
-  <label>Role</label><br>
-  <select id="loginRole" style="width:100%; padding:10px; margin-bottom:10px;">
-    <option value="Customer">Customer</option>
-    <option value="Vendor">Vendor</option>
-  </select><br>
-
-  <label>Username</label><br>
-  <input id="loginUser" type="text" placeholder="Username" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-
-  <label>Password</label><br>
-  <input id="loginPass" type="password" placeholder="Password" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-
-  <label>WhatsApp</label><br>
-  <input id="loginWhats" type="text" placeholder="8765550100" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-
-  <label>Market</label><br>
-  <select id="loginMarket" style="width:100%; padding:10px; margin-bottom:10px;">
-    <option>Coronation Market</option>
-    <option>Other Market</option>
-  </select><br>
-
-  <label>Vendor TRN / ID</label><br>
-  <input id="loginTRN" type="text" placeholder="TEST123" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-
-  <button onclick="createAccount()" style="width:100%; padding:12px; background:#f97316; color:#fff; border:none; border-radius:8px; margin-bottom:10px; font-weight:bold;">Create Account</button>
-  <button onclick="loginUser()" style="width:100%; padding:12px; background:#16a34a; color:#fff; border:none; border-radius:8px; font-weight:bold;">Login</button>
-  <button onclick="logoutUser()" style="width:100%; padding:10px; background:#eee; border:none; border-radius:8px; margin-top:10px;">Logout</button>
+<!-- LOGIN / SIGNUP -->
+<div id="authBox" class="card">
+  <h2>Login / Create Account</h2>
+  <input id="name" placeholder="Your Name">
+  <input id="email" placeholder="Email - e.g. mavis@gmail.com">
+  <input id="pass" type="password" placeholder="Password - 6+ chars">
+  <select id="role"><option value="customer">I am a Customer</option><option value="vendor">I am a Vendor</option></select>
+  <select id="market">
+    <option>Coronation Market</option><option>Cross Roads Market</option>
+    <option>Papine Market</option><option>Constant Spring Market</option><option>Half Way Tree Market</option>
+  </select>
+  <input id="phone" placeholder="WhatsApp e.g 8765550100">
+  <button onclick="signup()">Create Account</button>
+  <button onclick="login()" style="background:#0a4a1f;color:#fff">Login</button>
+  <p id="authMsg"></p>
 </div>
-
-<script>
-function createAccount() {
-  var user = document.getElementById('loginUser').value.trim();
-  var pass = document.getElementById('loginPass').value.trim();
-  var role = document.getElementById('loginRole').value;
-  var whats = document.getElementById('loginWhats').value.trim();
-  var market = document.getElementById('loginMarket').value;
-  var trn = document.getElementById('loginTRN').value.trim();
-  var msg = document.getElementById('loginMsg');
-
-  if (!user || !pass) {
-    msg.style.color = 'red';
-    msg.innerText = 'Please enter Username and Password';
-    return;
-  }
-  if (pass.length < 4) {
-    msg.style.color = 'red';
-    msg.innerText = 'Password must be at least 4 characters';
-    return;
-  }
-  var key = 'user_' + user.toLowerCase();
-  if (localStorage.getItem(key)) {
-    msg.style.color = 'red';
-    msg.innerText = 'That username is already taken, try another one';
-    return;
-  }
-
-  var account = { user: user, pass: pass, role: role, whats: whats, market: market, trn: trn };
-  localStorage.setItem(key, JSON.stringify(account));
-  localStorage.setItem('loggedInUser', JSON.stringify(account));
-
-  msg.style.color = 'green';
-  msg.innerText = 'Account created! You are now logged in as ' + user;
-  updateLoginDisplay();
-  alert('Account created for ' + user + ' as ' + role);
-}
-
-function loginUser() {
-  var user = document.getElementById('loginUser').value.trim();
-  var pass = document.getElementById('loginPass').value.trim();
-  var msg = document.getElementById('loginMsg');
-
-  var saved = localStorage.getItem('user_' + user.toLowerCase());
-  if (!saved) {
-    msg.style.color = 'red';
-    msg.innerText = 'No account found. Tap Create Account first.';
-    return;
-  }
-  var account = JSON.parse(saved);
-  if (account.pass !== pass) {
-    msg.style.color = 'red';
-    msg.innerText = 'Wrong password';
-    return;
-  }
-  localStorage.setItem('loggedInUser', JSON.stringify(account));
-  msg.style.color = 'green';
-  msg.innerText = 'Welcome back ' + user;
-  updateLoginDisplay();
-  alert('Logged in as ' + user);
-}
-
-function logoutUser() {
-  localStorage.removeItem('loggedInUser');
-  document.getElementById('loginMsg').innerText = 'Logged out';
-  updateLoginDisplay();
-}
-
-function updateLoginDisplay() {
-  var saved = localStorage.getItem('loggedInUser');
-  if (!saved) return;
-  var account = JSON.parse(saved);
-  // This updates the Guest text at the top and Vendor Dashboard name
-  var all = document.body.innerHTML;
-  // Update any element that says Guest
-  var guestEls = document.querySelectorAll('*');
-  guestEls.forEach(function(el){
-    if(el.children.length === 0 && el.innerText === 'Guest'){
-      el.innerText = account.user;
-    }
-  });
-  var dash = document.getElementById('vendorName');
-  if (dash) dash.innerText = account.user;
-}
-</script>
 
 <script>
 const firebaseConfig = {
@@ -195,91 +94,9 @@ async function signup(){
     loadUser(cred.user.uid);
   }catch(e){ alert(e.message); }
 }
-  async function createAccount() {
-  var user = document.getElementById('loginUser').value.trim();
-  var pass = document.getElementById('loginPass').value.trim();
-  var role = document.getElementById('loginRole').value;
-  var whats = document.getElementById('loginWhats').value.trim();
-  var market = document.getElementById('loginMarket').value;
-  var trn = document.getElementById('loginTRN').value.trim();
-  var msg = document.getElementById('loginMsg');
-
-  if (!user || !pass) { msg.innerText = 'Please enter Username and Password'; return; }
-  if (pass.length < 4) { msg.innerText = 'Password must be at least 4 characters'; return; }
-
-  // Turn username into an email Firebase will accept
-  // Test Vendor -> testvendor@yaad.local
-  var email = user.toLowerCase().replace(/\s+/g,'') + '@yaad.local';
-
-  try{
-    var cred = await auth.createUserWithEmailAndPassword(email, pass);
-    var uid = cred.user.uid;
-    var profile = { name: user, email: email, role: role, whats: whats, market: market, trn: trn };
-
-    await db.ref('users/' + uid).set(profile);
-    await fs.collection('users').doc(uid).set(profile);
-
-    msg.style.color = 'green';
-    msg.innerText = 'Account created! You are now logged in as ' + user;
-    showVendorPage(profile);
-  } catch(e){ msg.innerText = e.message; }
-}
-
-async function loginUser() {
-  var user = document.getElementById('loginUser').value.trim();
-  var pass = document.getElementById('loginPass').value.trim();
-  var msg = document.getElementById('loginMsg');
-
-  var email = user.toLowerCase().replace(/\s+/g,'') + '@yaad.local';
-
-  try{
-    var cred = await auth.signInWithEmailAndPassword(email, pass);
-    var uid = cred.user.uid;
-
-    // Load profile from Firestore, fallback to RTDB
-    var profile = null;
-    try{
-      var doc = await fs.collection('users').doc(uid).get();
-      if(doc.exists) profile = doc.data();
-    }catch(e){}
-    if(!profile){
-      var snap = await db.ref('users/' + uid).once('value');
-      if(snap.exists()) profile = snap.val();
-    }
-    if(!profile) profile = { name: user, email: email, role: document.getElementById('loginRole').value };
-
-    msg.style.color = 'green';
-    msg.innerText = 'Welcome back ' + profile.name;
-    showVendorPage(profile);
-  } catch(e){ msg.innerText = e.message; }
-}
-
-function showVendorPage(profile){
-  var authBox = document.getElementById('loginSection');
-  if(authBox) authBox.classList.add('hidden');
-  // Change Guest text at top
-  document.querySelectorAll('*').forEach(function(el){
-    if(el.children.length === 0 && el.innerText === 'Guest') el.innerText = profile.name;
-  });
-  var dash = document.getElementById('vendorName');
-  if(dash) dash.innerText = profile.name;
-  // Show vendor view if it exists
-  var v = document.getElementById('vendorView');
-  if(v) v.classList.remove('hidden');
-  var b = document.getElementById('buyerView');
-  if(b && profile.role !== 'Vendor') b.classList.remove('hidden');
-}
-
-function logoutUser() {
-  auth.signOut();
-  document.getElementById('loginMsg').innerText = 'Logged out';
-  location.reload();
-}
 
 async function login(){
-  const email = document.getElementById('email').value.trim();
-  alert("Email I am sending to Firebase: [" + email + ");
-        //...rest
+  const email = document.getElementById('email').value;
   const pass = document.getElementById('pass').value;
   try{
     const cred = await auth.signInWithEmailAndPassword(email, pass);
