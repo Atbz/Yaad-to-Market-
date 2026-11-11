@@ -152,7 +152,7 @@ async function addGood(){
   const price = document.getElementById('goodPrice').value;
   const qty = document.getElementById('goodQty').value;
   const list = document.getElementById('goodsList');
-  if(!name || !price || Qty){ alert ('Add name and price'); return; }
+  if(!name || !price || qty){ alert ('Add name and price'); return; }
   const user = auth.currentUser;
   if(!user){ alert ('Not logged in'); return; }
   await db.ref('goods/' + user.uid).push({ name: name, price: Number(price), qty: Number(qty || 0), createdAt: Date.now() });
