@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Yaad Market</title>
+<title>Yaad Market - Rebuild</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -24,7 +24,7 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 .live{color:#0a0;font-weight:700}
 </style></head><body>
 
-<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="showAuth()">Login</button></header>
+<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="show('auth')">Login</button></header>
   
 <!-- CUSTOMER VIEW -->
 <div id="customerView" class="card hidden">
@@ -37,14 +37,7 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 <div id="vendorView" class="card hidden">
   <h2>Welcome Vendor - <span id="vendorName"></span></h2>
   <p>Market: <span id="vendorMarket"></span></p>
-  <h3>Add New Goods</h3>
-  <input id="goodName" placeholder="Good Name - e.g. Ripe Banana">
-  <input id="goodPrice" type="number" placeholder="Price JMD - e.g. 500">
-  <input id="goodDesc" placeholder="Description - e.g. Fresh from St. Elizabeth
-    <button class="green" onclick="addGood()">Add Good</button>
-  <p id="addGoodMsg"></p>
-  <h3>Your Goods</h3>
-  <div id="myGoodsList">Loading...</div>
+  <p>You will see: Your Goods + Orders + Cash + Reviews here in Step 2.</p>
   <p id="vendorDebug"></p>
 </div>
 
@@ -81,13 +74,8 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-function showAuth(){ 
-alert('showAuth was clicked!')
-  let el = document.getelementbyId('authBox');
-  if(!el){alert('authBox NOT FOUND'); return;}
-    el.style.display ='block';
-          el.scrollIntoView({behavior:'smooth'});
-  
+function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
+
 async function signup(){
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
@@ -134,52 +122,4 @@ async function loadUser(uid){
 }
 
 auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
-  async function addGood(){
-    let name = document.getElementById('goodName').value;
-    let price = document.getElementById('goodprice').value;
-    let desc = document.getElementById('goodDesc').value;
-    let market = document.getElementById('vendorMarket').innerText;
-    let vendor = document.getElementById('vendorName').innerText;
-    let user = firebase.auth().currentUser;
-    if(!name || !price){ document.getElementById('addGoodMsg').innerText = 'Please add Name and Price'; return;}
-    try{
-      await db.collection('goods').add({
-        name: name,
-        price: Number(price),
-        desc: desc,
-        market: market,
-        vendor: vendor,
-        vendorId: user ? user.uid : 'unknown',
-        createdAt; new Date()
-    });
-    document.getElementById('addGoodMsg').innerText = 'Good added! ✅';
-    document.getElementById('goodName').value = '';
-    document.getElementById('goodPrice').value = '';
-    document.getElementById('goodDesc').value = '';
-    loadMyGoods();
-  }catch(e){
-    document.getElementById('addGoodMsg').innerText = 'Error: ' + e.message;
-  }
-}
-
-async function loadMyGoods(){
-  let user = firebase.auth().currentUser;
-  if(!user) return;
-  let snap = await db.collection('goods').where('vendorId','==',user.uid).get();
-  let html = '';
-  snap.forEach(doc => {
-    let g = doc.data();
-    html += '<div class="prod"><b>' + g.name + '</b> - $' + g.price + ' JMD<br>' + (g.desc||'') + '</div>';
-  });
-  if(!html) html = 'No goods yet. Add one above.';
-  document.getElementById('myGoodsList').innerHTML = html;
-}
-  function showAuth(){
-    let authDiv = document.getElementById('authBox');
-    if(authDiv){ 
-      authDiv.classList.remove('hidden'); 
-      authdiv.scrollIntoView();
-      return; }
-    alert('auth box not found - id="auth" is missing');
-  }
 </script></body></html>
