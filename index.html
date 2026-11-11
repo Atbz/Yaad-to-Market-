@@ -140,8 +140,8 @@ async function loadUser(uid){
     document.getElementById('custDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Customer';
   }
 }
-  let currentVendorUid = null;
-  
+  auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
+ 
   async function addGood(){
     const name = document.getElementById('goodName').value.trim();
     const price = document.getElementById('goodPrice').value.();
@@ -167,5 +167,9 @@ async function loadUser(uid){
   }
 
 
-auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
+auth.onAuthStateChanged(function(user){
+  if(user){
+    SetTimeout(LoadVendorGoods, 500);
+  }
+});
 </script></body></html>
