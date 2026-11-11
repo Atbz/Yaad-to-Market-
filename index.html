@@ -25,7 +25,7 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 .live{color:#0a0;font-weight:700}
 </style></head><body>
 
-<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span></header>
+<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="show('auth')">Login</button></header>
   
 <!-- CUSTOMER VIEW -->
 <div id="customerView" class="card hidden">
@@ -111,15 +111,6 @@ async function loadUser(uid){
   document.getElementById('loginBtn').onclick = () => auth.signOut().then(()=>location.reload());
   document.getElementById('authBox').classList.add('hidden');
 
-  async function show(id){
-    //Hide all screens
-    document.querySelectorAll('.screen').forEach(s => s.style.display ='none');
-    //Show the one you asked for
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'block';
-  }
-    
-
   if(user.role === 'vendor'){
     document.getElementById('vendorView').classList.remove('hidden');
     document.getElementById('vendorName').innerText = user.name;
@@ -133,14 +124,4 @@ async function loadUser(uid){
 }
 
 auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
-  aut.onAuthStateChange(user) => {
-  const btn = documnent.getElementById('loginBtn');
-    const label = document.getElementById('userLabel')
-
-    if (user){
-      label.textContent = user.name;
-      btn.textContent = 'Logout';
-      btn.onclick = () => show('auth');
-    }
-  });
 </script></body></html>
