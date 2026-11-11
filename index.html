@@ -87,7 +87,13 @@ const rtdb = firebase.database();
 const fsdb = firebase.firestore();
 
 function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
-
+function showAuth(){ 
+alert('showAuth was clicked!')
+  let el = document.getelementbyId('authBox');
+  if(!el){alert('authBox NOT FOUND'); return;}
+    el.style.display ='block';
+          el.scrollIntoView({behavior:'smooth'});
+  
 async function signup(){
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
@@ -175,7 +181,11 @@ async function loadMyGoods(){
   document.getElementById('myGoodsList').innerHTML = html;
 }
   function showAuth(){
-    let authDiv = document.getElementById('auth');
-    if(authDiv){ authDiv.classList.remove('hidden'); authdiv.scrollIntoView(); return; }
+    let authDiv = document.getElementById('authBox');
+    if(authDiv){ 
+      authDiv.classList.remove('hidden'); 
+      authdiv.scrollIntoView();
+      return; }
     alert('auth box not found - id="auth" is missing');
+  }
 </script></body></html>
