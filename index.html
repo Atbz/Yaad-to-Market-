@@ -123,7 +123,7 @@ async function loadUser(uid){
   document.getElementById('loginBtn').onclick = () => auth.signOut().then(()=>location.reload());
   document.getElementById('authBox').classList.add('hidden');
 
-  function show(id){
+  async function show(id){
     //Hide all screens
     document.querySelectorAll('.screen').foreach(s => s.style.display ='none');
     //Show the one you asked for
@@ -131,7 +131,7 @@ async function loadUser(uid){
     if (el) el.style.display = 'block';
   }
 
-  function doLogin(){
+  async function doLogin(){
     const email = document.getElementById('emailInput').value;
     const pass = document.getElementById('passwordInput').value;
     auth.signInWithEmailAndPassword(email, pass)
@@ -139,7 +139,7 @@ async function loadUser(uid){
     .catch(e => alert(e.message));
   }
 
-  function doSignup(){
+  async function doSignup(){
     const email = document.getElementById('emailInput').value
     const pass = doc.getElementById('passwordInput').value
     auth.createUserWithEmailAndPassword(email, pass)
