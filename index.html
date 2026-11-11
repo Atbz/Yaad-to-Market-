@@ -36,7 +36,7 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 <!-- VENDOR VIEW -->
 <div id="vendorView" class="card hidden">
   <h2>Welcome Vendor - <span id="vendorName"></span></h2>
-  <select id="vendorMarketSelect" onchange="document.getElementById('vendorMarket').textContent = this.value">
+  <select id="vendorMarketSelect" onchange="changeMarket()">
     <option value="Coronation Market">Coronation Market</option>
     <option>Cross Roads Market</option>
     <option>Papine Market</option>
@@ -148,6 +148,11 @@ async function loadUser(uid){
     document.getElementById('custDebug').innerText = 'UID: ' + uid + ' | Role check PASSED - Customer';
   }
 }
+  function changeMarket(){
+    const m = document.getElementById('vendorMarketSelect').value;
+    document.getElementById('vendorMarket').innerText = m;
+  }
+  
 async function addGood(){
   const name = document.getElementById('goodName').value.trim();
   const price = document.getElementById('goodPrice').value;
