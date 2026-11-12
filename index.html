@@ -173,7 +173,7 @@ window.addEventListener('load', function(){
   var box = document.getElementById('vendorAddBox');
   if(!saved){ if(box) box.style.display='none'; return; }
   var acc = JSON.parse(saved);
-  if(acc.role !== 'Vendor'){ if(box) box.style.display='none'; }
+  if(acc.role !== 'vendor'){ if(box) box.style.display='none'; }
   else {
     if(box) box.style.display='block';
     var n = document.getElementById('vendorAddName');
@@ -298,7 +298,7 @@ async function addGood(){
   const price = document.getElementById('goodPrice').value;
   const qty = document.getElementById('goodQty').value;
   const list = document.getElementById('goodsList');
-  if(!name || !price || qty){ alert ('Add name and price'); return; }
+  if(!name || !price || !qty){ alert ('Add name and price'); return; }
   const user = auth.currentUser;
   if(!user){ alert ('Not logged in'); return; }
   await db.ref('goods/' + user.uid).push({ name: name, price: Number(price), qty: Number(qty || 0), createdAt: Date.now() });
@@ -321,11 +321,6 @@ async function loadVendorGoods(){
   }
   list.innerHTML = html || '<p>No goods yet.</p>';
 }
-
-auth.onAuthStateChanged(function(user){
-  if(user){
-    setTimeout(loadVendorGoods, 500);
-  }
-});
-auth.onAuthStateChanged(u => { if(u) loadUser(u.uid); });
+    
+auth.onAuthStateChanged(u => { if(u) loadUser(u.uid);setTimeout(loadVendorGoods, 500 });
 </script></body></html>
