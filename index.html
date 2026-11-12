@@ -24,6 +24,42 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 .live{color:#0a0;font-weight:700}
 </style></head><body>
 
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBLGA_B9rwMh_tllJ2dGJbf3duo9ZrTOgM",
+  authDomain: "yaad-to-market-kngst.firebaseapp.com",
+  databaseURL: "https://yaad-to-market-kngst-default-rtdb.firebaseio.com",
+  projectId: "yaad-to-market-kngst",
+  storageBucket: "yaad-to-market-kngst.firebasestorage.app",
+  messagingSenderId: "209573811332",
+  appId: "1:209573811332:web:37a9ef4fe63c3615eb1ed1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// This line is the key - it makes the button able to see it
+window.addVendorProduct = async function(){
+  const name = document.getElementById('proName').value.trim();
+  const price = document.getElementById('proPrice').value.trim();
+  const stock = document.getElementById('proStock').value.trim();
+  if(!name || !price){ alert('Enter Name and Price'); return; }
+
+  await push(ref(db, 'shopProducts'), {
+    name: name,
+    price: Number(price),
+    stock: Number(stock) || 0,
+    vendor: 'Vendor',
+    market: 'Kingston'
+  });
+  alert('Added!');
+}
+</script>
+
+    
 <header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="show('auth')">Login</button></header>
   
 <!-- CUSTOMER VIEW -->
