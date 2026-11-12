@@ -166,7 +166,43 @@ async function signup(){
     await db.ref('users/' + cred.user.uid).set({ name, email, role, market, phone, cashCollected: 0, ordersCompleted: 0, createdAt: Date.now() });
     loadUser(cred.user.uid);
   }catch(e){ alert(e.message); }
+    
+ <script>
+function createAccount() {
+var user = document.getElementById('loginUser').value.trim();
+var pass = document.getElementById('loginPass').value.trim();
+var role = document.getElementById('loginRole').value;
+var whats = document.getElementById('loginWhats').value.trim();
+var market = document.getElementById('loginMarket').value;
+var trn = document.getElementById('loginTRN').value.trim();
+var msg = document.getElementById('loginMsg');
+
+if (!user || !pass) {
+msg.style.color = 'red';
+msg.innerText = 'Please enter Username and Password';
+return;
 }
+if (pass.length < 4) {
+msg.style.color = 'red';
+msg.innerText = 'Password must be at least 4 characters';
+return;
+}
+var key = 'user_' + user.toLowerCase();
+if (localStorage.getItem(key)) {
+msg.style.color = 'red';
+msg.innerText = 'That username is already taken, try another one';
+return;
+}
+var account = { user: user, pass: pass, role: role, whats: whats, market: market, trn: trn };
+localStorage.setItem(key, JSON.stringify(account));
+localStorage.setItem('loggedInUser', JSON.stringify(account));
+msg.style.color = 'green';
+msg.innerText = 'Account created! You are now logged in as ' + user;
+updateLoginDisplay();
+alert('Account created for ' + user + ' as ' + role);
+}
+    </script>
+  <script>
 
 async function login(){
   const email = document.getElementById('email').value;
