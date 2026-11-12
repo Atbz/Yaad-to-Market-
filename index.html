@@ -150,7 +150,7 @@ async function signup(){
     await db.ref('users/' + cred.user.uid).set({ name, email, role, market, phone, cashCollected: 0, ordersCompleted: 0, createdAt: Date.now() });
     loadUser(cred.user.uid);
   }catch(e){ alert(e.message); }
-    
+    </script> 
  <script>
 function createAccount() {
 var user = document.getElementById('loginUser').value.trim();
