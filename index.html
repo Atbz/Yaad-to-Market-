@@ -41,9 +41,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-
 const auth = getAuth(app);
 
 window.signup = async function(){
@@ -83,7 +80,7 @@ window.addVendorProduct = async function(){
 </script>
 
     
-<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="show('auth')">Login</button></header>
+<header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="showAuth()">Login</button></header>
   
 <!-- CUSTOMER VIEW -->
 <div id="customerView" class="card hidden">
@@ -97,7 +94,7 @@ window.addVendorProduct = async function(){
   <h2>Login / Create Account</h2>
   <input id="name" placeholder="Your Name">
   <input id="email" placeholder="Email - e.g. mavis@gmail.com">
-  <input id="pass" type="password" placeholder="Password - 6+ chars">
+  <input id="password" type="password" placeholder="Password - 6+ chars">
   <select id="role"><option value="customer">I am a Customer</option><option value="vendor">I am a Vendor</option></select>
   <select id="market">
     <option>Coronation Market</option><option>Cross Roads Market</option>
@@ -113,29 +110,15 @@ window.addVendorProduct = async function(){
 <div id="vendorAddBox" style="padding:20px; background:#fff7ed; border:2px solid #f97316; border-radius:12px; margin:10px;">
   <h3>Add Goods - Vendor Only</h3>
   <p>You are logged in as <b id="vendorAddName">Vendor</b></p>
-  <input id="prodName" type="text" placeholder="Product Name e.g. Test Banana" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-  <input id="prodPrice" type="number" placeholder="Price J$ 500" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-  <input id="prodStock" type="number" placeholder="Stock 10" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+  <input id="proName" type="text" placeholder="Product Name e.g. Test Banana" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+  <input id="proPrice" type="number" placeholder="Price J$ 500" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+  <input id="proStock" type="number" placeholder="Stock 10" style="width:100%; padding:10px; margin-bottom:10px;"><br>
   <button onclick="addVendorProduct()" style="width:100%; padding:12px; background:#f97316; color:#fff; border:none; border-radius:8px; font-weight:bold;">Add Product to Shop</button>
   <p id="prodMsg" style="color:green;"></p>
 </div>
 
 <script>
-function addVendorProduct(){
-  var name = document.getElementById('proName').value.trim();
-  var price = document.getElementById('proPrice').value.trim();
-  var stock = document.getElementById('proStock').value.trim();
-  var acc = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
-  if(!acc){ alert('Login as Vendor first'); return; }
-  if(!name || !price){ alert('Enter Name and Price'); return; }
-  var products = JSON.parse(localStorage.getItem('shopProducts') || '[]');
-  products.push({ name:name, price:price, stock:stock, vendor:acc.user, market:acc.market || 'Kingston' });
-  localStorage.setItem('shopProducts', JSON.stringify(products));
-  document.getElementById('proName').value = '';
-  document.getElementById('proPrice').value = '';
-  document.getElementById('proStock').value = '';
-  renderVendorProducts(); render();
-}
+
 function editVendorProduct(i){
   var products = JSON.parse(localStorage.getItem('shopProducts') || '[]');
   var p = products[i];
@@ -189,10 +172,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
-const fdb = firebase.firestore();
-
 function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
 
 async function signup(){
@@ -207,7 +186,7 @@ async function signup(){
     const cred = await auth.createUserWithEmailAndPassword(email, pass);
     await db.ref('users/' + cred.user.uid).set({ name, email, role, market, phone, cashCollected: 0, ordersCompleted: 0, createdAt: Date.now() });
     loadUser(cred.user.uid);
-  }catch(e){ alert(e.message); }
+  }catch(e){ alert(e.message); }}
     </script> 
  <script>
 function createAccount() {
@@ -270,7 +249,7 @@ async function loadUser(uid){
     try{
       await db.ref('users/' + uid).set(user);
     }catch(e){ alert('Could not save profile: ' + e.message); return; }
-  }
+  }}
 
   document.getElementById('userLabel').innerText = user.name + ' (' + user.role + ')';
   document.getElementById('loginBtn').innerText = 'Logout';
