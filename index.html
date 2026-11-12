@@ -25,8 +25,9 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
 </style></head><body>
 
   <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBLGA_B9rwMh_tllJ2dGJbf3duo9ZrTOgM",
@@ -40,6 +41,28 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const auth = getAuth(app);
+
+window.signup = async function(){
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value.trim();
+  try{
+    await createUserWithEmailAndPassword(auth, email, pass);
+    alert('Account created! Now click Login');
+  }catch(e){ alert(e.message); }
+}
+
+window.login = async function(){
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value.trim();
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    alert('Logged in!');
+  }catch(e){ alert(e.message); }
+}
 
 // This line is the key - it makes the button able to see it
 window.addVendorProduct = async function(){
