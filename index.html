@@ -117,22 +117,6 @@ window.addEventListener('load', function(){
     if(n) n.innerText = acc.user;
   }
 });
-<!-- LOGIN / SIGNUP -->
-<div id="authBox" class="card">
-  <h2>Login / Create Account</h2>
-  <input id="name" placeholder="Your Name">
-  <input id="email" placeholder="Email - e.g. mavis@gmail.com">
-  <input id="pass" type="password" placeholder="Password - 6+ chars">
-  <select id="role"><option value="customer">I am a Customer</option><option value="vendor">I am a Vendor</option></select>
-  <select id="market">
-    <option>Coronation Market</option><option>Cross Roads Market</option>
-    <option>Papine Market</option><option>Constant Spring Market</option><option>Half Way Tree Market</option>
-  </select>
-  <input id="phone" placeholder="WhatsApp e.g 8765550100">
-  <button onclick="signup()">Create Account</button>
-  <button onclick="login()" style="background:#0a4a1f;color:#fff">Login</button>
-  <p id="authMsg"></p>
- </div>
   </script>
 <script>
 const firebaseConfig = {
