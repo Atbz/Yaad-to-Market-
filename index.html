@@ -34,17 +34,6 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
   <p id="custDebug"></p>
 </div>
 
-<!-- VENDOR ADD GOODS - FIX -->
-<div id="vendorAddBox" style="padding:20px; background:#fff7ed; border:2px solid #f97316; border-radius:12px; margin:10px;">
-  <h3>Add Goods - Vendor Only</h3>
-  <p>You are logged in as <b id="vendorAddName">Vendor</b></p>
-  <input id="prodName" type="text" placeholder="Product Name e.g. Test Banana" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-  <input id="prodPrice" type="number" placeholder="Price J$ 500" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-  <input id="prodStock" type="number" placeholder="Stock 10" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-  <button onclick="addVendorProduct()" style="width:100%; padding:12px; background:#f97316; color:#fff; border:none; border-radius:8px; font-weight:bold;">Add Product to Shop</button>
-  <p id="prodMsg" style="color:green;"></p>
-</div>
-
   <!-- LOGIN / SIGNUP -->
 <div id="authBox" class="card">
   <h2>Login / Create Account</h2>
@@ -61,7 +50,18 @@ input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1px solid #ccc
   <button onclick="login()" style="background:#0a4a1f;color:#fff">Login</button>
   <p id="authMsg"></p>
 </div>
-  
+
+  <!-- VENDOR ADD GOODS - FIX -->
+<div id="vendorAddBox" style="padding:20px; background:#fff7ed; border:2px solid #f97316; border-radius:12px; margin:10px;">
+  <h3>Add Goods - Vendor Only</h3>
+  <p>You are logged in as <b id="vendorAddName">Vendor</b></p>
+  <input id="prodName" type="text" placeholder="Product Name e.g. Test Banana" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+  <input id="prodPrice" type="number" placeholder="Price J$ 500" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+  <input id="prodStock" type="number" placeholder="Stock 10" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+  <button onclick="addVendorProduct()" style="width:100%; padding:12px; background:#f97316; color:#fff; border:none; border-radius:8px; font-weight:bold;">Add Product to Shop</button>
+  <p id="prodMsg" style="color:green;"></p>
+</div>
+
 <script>
 function addVendorProduct(){
   var name = document.getElementById('proName').value.trim();
