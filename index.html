@@ -71,7 +71,7 @@ window.addVendorProduct = async function(){
   const stock = document.getElementById('proStock').value.trim();
   if(!name || !price){ alert('Enter Name and Price'); return; }
 
-  await push(ref(db, 'shopProducts'), {
+  await push(ref(db, 'yaadKNG/products'), {
     name: name,
     price: Number(price),
     stock: Number(stock) || 0,
