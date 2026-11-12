@@ -123,7 +123,7 @@ window.addVendorProduct = async function(){
     <option>Papine Market</option><option>Constant Spring Market</option><option>Half Way Tree Market</option>
   </select>
   <input id="phone" placeholder="WhatsApp e.g 8765550100">
-  <button onclick="signup()">Create Account</button>
+  <button onclick="signup()">createAccount</button>
   <button onclick="login()" style="background:#0a4a1f;color:#fff">Login</button>
   <p id="authMsg"></p>
 </div>
@@ -199,7 +199,7 @@ function showAuth(){ document.getElementById('authBox').classList.remove('hidden
 async function signup(){
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
-  const pass = document.getElementById('pass').value;
+  const password= document.getElementById('pass').value;
   const role = document.getElementById('role').value;
   const market = document.getElementById('market').value;
   const phone = document.getElementById('phone').value;
@@ -213,7 +213,7 @@ async function signup(){
  <script>
 function createAccount() {
 var user = document.getElementById('loginUser').value.trim();
-var pass = document.getElementById('loginPass').value.trim();
+var password = document.getElementById('loginPass').value.trim();
 var role = document.getElementById('loginRole').value;
 var whats = document.getElementById('loginWhats').value.trim();
 var market = document.getElementById('loginMarket').value;
@@ -249,7 +249,7 @@ alert('Account created for ' + user + ' as ' + role);
 
 async function login(){
   const email = document.getElementById('email').value;
-  const pass = document.getElementById('pass').value;
+  const password = document.getElementById('pass').value;
   try{
     const cred = await auth.signInWithEmailAndPassword(email, pass);
     loadUser(cred.user.uid);
