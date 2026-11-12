@@ -41,6 +41,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
 const auth = getAuth(app);
 
 window.signup = async function(){
@@ -77,7 +80,8 @@ window.addVendorProduct = async function(){
   });
   alert('Added!');
 }
-  </sript>
+</script>
+
     
 <header><div style="display:flex;align-items:center;gap:10px"><img src="logo.png"><b>Yaad Market KINGSTON - LIVE</b></div><span id="userLabel">Guest</span><button id="loginBtn" onclick="show('auth')">Login</button></header>
   
@@ -116,6 +120,130 @@ window.addVendorProduct = async function(){
   <p id="prodMsg" style="color:green;"></p>
 </div>
 
+<script>
+function addVendorProduct(){
+  var name = document.getElementById('proName').value.trim();
+  var price = document.getElementById('proPrice').value.trim();
+  var stock = document.getElementById('proStock').value.trim();
+  var acc = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+  if(!acc){ alert('Login as Vendor first'); return; }
+  if(!name || !price){ alert('Enter Name and Price'); return; }
+  var products = JSON.parse(localStorage.getItem('shopProducts') || '[]');
+  products.push({ name:name, price:price, stock:stock, vendor:acc.user, market:acc.market || 'Kingston' });
+  localStorage.setItem('shopProducts', JSON.stringify(products));
+  document.getElementById('proName').value = '';
+  document.getElementById('proPrice').value = '';
+  document.getElementById('proStock').value = '';
+  renderVendorProducts(); render();
+}
+function editVendorProduct(i){
+  var products = JSON.parse(localStorage.getItem('shopProducts') || '[]');
+  var p = products[i];
+  var np = prompt('Edit price for ' + p.name + ' (JMD)', p.price); if(np === null) return;
+  var ns = prompt('Edit stock for ' + p.name, p.stock); if(ns === null) return;
+  p.price = np; p.stock = ns;
+  localStorage.setItem('shopProducts', JSON.stringify(products));
+  renderVendorProducts(); render();
+}
+function deleteVendorProduct(i){
+  if(!confirm('Delete this good?')) return;
+  var products = JSON.parse(localStorage.getItem('shopProducts') || '[]');
+  products.splice(i, 1);
+  localStorage.setItem('shopProducts', JSON.stringify(products));
+  renderVendorProducts(); render();
+}
+
+// Make the old Vendor Dashboard button also scroll to this box
+document.querySelectorAll('button, a').forEach(function(b){
+  if(b.innerText.trim() === 'Vendor Dashboard'){
+    b.onclick = function(){
+      document.getElementById('vendorAddBox').scrollIntoView({behavior:'smooth'});
+    };
+  }
+});
+
+// Hide this box if NOT a vendor, show if vendor
+window.addEventListener('load', function(){
+  var saved = localStorage.getItem('loggedInUser');
+  var box = document.getElementById('vendorAddBox');
+  if(!saved){ if(box) box.style.display='none'; return; }
+  var acc = JSON.parse(saved);
+  if(acc.role !== 'Vendor'){ if(box) box.style.display='none'; }
+  else {
+    if(box) box.style.display='block';
+    var n = document.getElementById('vendorAddName');
+    if(n) n.innerText = acc.user;
+  }
+});
+  </script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBLGA_B9rwMh_tllJ2dGJbf3duo9ZrTOgM",
+  authDomain: "yaad-to-market-kngst.firebaseapp.com",
+  databaseURL: "https://yaad-to-market-kngst-default-rtdb.firebaseio.com",
+  projectId: "yaad-to-market-kngst",
+  storageBucket: "yaad-to-market-kngst.firebasestorage.app",
+  messagingSenderId: "209573811332",
+  appId: "1:209573811332:web:37a9ef4fe63c3615eb1ed1"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+const fdb = firebase.firestore();
+
+function showAuth(){ document.getElementById('authBox').classList.remove('hidden'); }
+
+async function signup(){
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('pass').value;
+  const role = document.getElementById('role').value;
+  const market = document.getElementById('market').value;
+  const phone = document.getElementById('phone').value;
+  if(!name || !email || pass.length < 6) return alert('Name + Email + 6 char password');
+  try{
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    await db.ref('users/' + cred.user.uid).set({ name, email, role, market, phone, cashCollected: 0, ordersCompleted: 0, createdAt: Date.now() });
+    loadUser(cred.user.uid);
+  }catch(e){ alert(e.message); }
+    </script> 
+ <script>
+function createAccount() {
+var user = document.getElementById('loginUser').value.trim();
+var pass = document.getElementById('loginPass').value.trim();
+var role = document.getElementById('loginRole').value;
+var whats = document.getElementById('loginWhats').value.trim();
+var market = document.getElementById('loginMarket').value;
+var trn = document.getElementById('loginTRN').value.trim();
+var msg = document.getElementById('loginMsg');
+
+if (!user || !pass) {
+msg.style.color = 'red';
+msg.innerText = 'Please enter Username and Password';
+return;
+}
+if (pass.length < 4) {
+msg.style.color = 'red';
+msg.innerText = 'Password must be at least 4 characters';
+return;
+}
+var key = 'user_' + user.toLowerCase();
+if (localStorage.getItem(key)) {
+msg.style.color = 'red';
+msg.innerText = 'That username is already taken, try another one';
+return;
+}
+var account = { user: user, pass: pass, role: role, whats: whats, market: market, trn: trn };
+localStorage.setItem(key, JSON.stringify(account));
+localStorage.setItem('loggedInUser', JSON.stringify(account));
+msg.style.color = 'green';
+msg.innerText = 'Account created! You are now logged in as ' + user;
+updateLoginDisplay();
+alert('Account created for ' + user + ' as ' + role);
+}
+    </script>
   <script>
 
 async function login(){
